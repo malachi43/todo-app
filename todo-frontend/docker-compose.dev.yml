@@ -1,0 +1,21 @@
+services:
+  app:
+    image: hello-front-dev #the image to build.
+    build:
+      context: . #this will use the current directory as the context.
+      dockerfile: dev.Dockerfile #the dockerfile that will be used to build the image.
+    ports:
+    - 5173:5173
+    environment:
+      - VITE_BACKEND_URL=http://localhost:4000
+    container_name: hello-front-dev #thus will be used as the name of the container.
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse_proxy
+    depends_on:
+      - app # wait for the frontend container to be started
